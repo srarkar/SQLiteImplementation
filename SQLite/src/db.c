@@ -24,14 +24,13 @@ void print_prompt() { printf("db > "); }
 // read a line of input
 /*
 lineptr : a pointer to the variable we use to point to the buffer containing the read line. 
-If it set to NULL it is mallocatted by getline and should thus be freed by the user, even if the command fails.
+If set to NULL, it is malloc'd by getline and should be freed by the user, even if the command fails.
 
-n : a pointer to the variable we use to save the size of allocated buffer.
+n is a pointer to the variable we use to save the size of allocated buffer.
 
-stream : the input stream to read from. We’ll be reading from standard input.
+stream is the input stream to read from. We’ll be reading from standard input.
 
-returns the number of bytes read, which may be less than the size of the buffer.
-*/
+returns the number of bytes read, which may be less than the size of the buffer. */
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 
 // store readline in input buffer
@@ -48,6 +47,16 @@ void read_input(InputBuffer* input_buffer) {
   input_buffer->input_length = bytes_read - 1;
   input_buffer->buffer[bytes_read - 1] = 0;
 }
+
+// wrapper for meta commands -- more to be added later
+MetaCommandResult do_meta_command(InputBuffer* input_buffer) {
+  if (strcmp(input_buffer->buffer, ".exit") == 0) {
+    exit(EXIT_SUCCESS);
+  } else {
+    return META_COMMAND_UNRECOGNIZED_COMMAND;
+  }
+}
+
 
 
 // basic REPL
