@@ -15,6 +15,11 @@ typedef struct {
   ssize_t input_length;
 } InputBuffer;
 
+typedef struct {
+  int file_descriptor;
+  uint32_t file_length;
+  void* pages[TABLE_MAX_PAGES];
+} Pager;
 
 typedef struct {
   uint32_t id;
@@ -34,7 +39,7 @@ const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
 typedef struct {
   uint32_t num_rows;
-  void* pages[TABLE_MAX_PAGES];
+  Pager* pager;
 } Table;
 
 const uint32_t PAGE_SIZE = 4096; // 4 KB page size
