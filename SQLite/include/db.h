@@ -18,8 +18,8 @@ typedef struct {
 
 typedef struct {
   uint32_t id;
-  char username[COLUMN_USERNAME_SIZE];
-  char email[COLUMN_EMAIL_SIZE];
+  char username[COLUMN_USERNAME_SIZE + 1]; // allocate an extra byte for null terminator
+  char email[COLUMN_EMAIL_SIZE + 1];       //
 } Row;
 
 // compact representation of a table row
@@ -41,7 +41,10 @@ const uint32_t PAGE_SIZE = 4096; // 4 KB page size
 const uint32_t ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
 const uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
-typedef enum { STATEMENT_INSERT, STATEMENT_SELECT } StatementType;
+typedef enum { 
+  STATEMENT_INSERT,
+  STATEMENT_SELECT
+} StatementType;
 
 typedef struct {
   StatementType type;
@@ -55,6 +58,12 @@ typedef enum {
   META_COMMAND_UNRECOGNIZED_COMMAND
 } MetaCommandResult;
 
-typedef enum { PREPARE_SUCCESS, PREPARE_SYNTAX_ERROR, PREPARE_UNRECOGNIZED_STATEMENT } PrepareResult;
+typedef enum { 
+  PREPARE_SUCCESS, 
+  PREPARE_NEGATIVE_ID, 
+  PREPARE_STRING_TOO_LONG, 
+  PREPARE_SYNTAX_ERROR, 
+  PREPARE_UNRECOGNIZED_STATEMENT
+} PrepareResult;
 
 #endif
