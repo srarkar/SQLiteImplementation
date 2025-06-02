@@ -18,6 +18,7 @@ typedef struct {
 
 typedef struct {
   int file_descriptor;
+  uint32_t num_pages;
   uint32_t file_length;
   void* pages[TABLE_MAX_PAGES];
 } Pager;
@@ -39,7 +40,7 @@ const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
 
 typedef struct {
-  uint32_t num_rows;
+  uint32_t root_page_num;
   Pager* pager;
 } Table;
 
@@ -102,9 +103,12 @@ const uint32_t LEAF_NODE_SPACE_FOR_CELLS = PAGE_SIZE - LEAF_NODE_HEADER_SIZE;
 const uint32_t LEAF_NODE_MAX_CELLS =
     LEAF_NODE_SPACE_FOR_CELLS / LEAF_NODE_CELL_SIZE;
 
+
+// page and cell number determine location in B-Tree
 typedef struct {
   Table* table;
-  uint32_t row_num;
+  uint32_t page_num;
+  uint32_t cell_num;
   bool end_of_table;  // Indicates a position one past the last element. useful for creating a new row
 } Cursor;
 

@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Iinclude -Wall -Wextra
-SRC=src/main.c
+SRC=src/db.c
 OBJ=$(SRC:.c=.o)
 EXEC=my_program
 
