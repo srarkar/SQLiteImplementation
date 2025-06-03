@@ -58,7 +58,11 @@ typedef struct {
   Row row_to_insert;  // only used by insert statement
 } Statement;
 
-typedef enum { EXECUTE_SUCCESS, EXECUTE_TABLE_FULL } ExecuteResult;
+typedef enum {
+  EXECUTE_SUCCESS,
+  EXECUTE_DUPLICATE_KEY,
+  EXECUTE_TABLE_FULL
+} ExecuteResult_t;
 
 typedef enum {
   META_COMMAND_SUCCESS,
