@@ -207,6 +207,43 @@ void set_node_type(void* node, NodeType type) {
   *((uint8_t*)(node + NODE_TYPE_OFFSET)) = value;
 }
 
+
+// reading and writing to an internal node
+uint32_t* internal_node_num_keys(void* node) {
+  return node + INTERNAL_NODE_NUM_KEYS_OFFSET;
+}
+
+uint32_t* internal_node_right_child(void* node) {
+  return node + INTERNAL_NODE_RIGHT_CHILD_OFFSET;
+}
+
+uint32_t* internal_node_cell(void* node, uint32_t cell_num) {
+  return node + INTERNAL_NODE_HEADER_SIZE + cell_num * INTERNAL_NODE_CELL_SIZE;
+}
+
+uint32_t* internal_node_child(void* node, uint32_t child_num) {
+  uint32_t num_keys = *internal_node_num_keys(node);
+  if (child_num > num_keys) {
+    printf("Tried to access child_num %d > num_keys %d\n", child_num, num_keys);
+    exit(EXIT_FAILURE);
+  } else if (child_num == num_keys) {
+    return internal_node_right_child(node);
+  } else {
+    return internal_node_cell(node, child_num);
+  }
+}
+
+/*
+Until we start recycling free pages, new pages will always
+go onto the end of the database file
+*/
+uint32_t get_unused_page_num(Pager* pager) { return pager->num_pages; }
+
+uint32_t* internal_node_key(void* node, uint32_t key_num) {
+  return internal_node_cell(node, key_num) + INTERNAL_NODE_CHILD_SIZE;
+}
+
+
 // find leaf with binary search
 Cursor* leaf_node_find(Table* table, uint32_t page_num, uint32_t key) {
   void* node = get_page(table->pager, page_num);
@@ -237,6 +274,36 @@ Cursor* leaf_node_find(Table* table, uint32_t page_num, uint32_t key) {
   return cursor;
 }
 
+// binary search
+Cursor* internal_node_find(Table* table, uint32_t page_num, uint32_t key) {
+  void* node = get_page(table->pager, page_num);
+  uint32_t num_keys = *internal_node_num_keys(node);
+
+  /* Binary search to find index of child to search */
+  uint32_t min_index = 0;
+  uint32_t max_index = num_keys; /* there is one more child than key */
+
+  while (min_index != max_index) {
+    uint32_t index = (min_index + max_index) / 2;
+    uint32_t key_to_right = *internal_node_key(node, index);
+    if (key_to_right >= key) {
+      max_index = index;
+    } else {
+      min_index = index + 1;
+    }
+  }
+
+  // use search function on child
+  uint32_t child_num = *internal_node_child(node, min_index);
+  void* child = get_page(table->pager, child_num);
+  switch (get_node_type(child)) {
+    case NODE_LEAF:
+      return leaf_node_find(table, child_num, key);
+    case NODE_INTERNAL:
+      return internal_node_find(table, child_num, key);
+  }
+}
+
 /*
 Return the position of the given key.
 If key is not present, return position where it should be inserted
@@ -248,8 +315,7 @@ Cursor* table_find(Table* table, uint32_t key) {
   if (get_node_type(root_node) == NODE_LEAF) {
     return leaf_node_find(table, root_page_num, key);
   } else {
-    printf("Need to implement searching an internal node\n");
-    exit(EXIT_FAILURE);
+    return internal_node_find(table, root_page_num, key);
   }
 }
 
@@ -363,30 +429,7 @@ PrepareResult prepare_statement(InputBuffer* input_buffer,
 
 
 
-// reading and writing to an internal node
-uint32_t* internal_node_num_keys(void* node) {
-  return node + INTERNAL_NODE_NUM_KEYS_OFFSET;
-}
 
-uint32_t* internal_node_right_child(void* node) {
-  return node + INTERNAL_NODE_RIGHT_CHILD_OFFSET;
-}
-
-uint32_t* internal_node_cell(void* node, uint32_t cell_num) {
-  return node + INTERNAL_NODE_HEADER_SIZE + cell_num * INTERNAL_NODE_CELL_SIZE;
-}
-
-uint32_t* internal_node_child(void* node, uint32_t child_num) {
-  uint32_t num_keys = *internal_node_num_keys(node);
-  if (child_num > num_keys) {
-    printf("Tried to access child_num %d > num_keys %d\n", child_num, num_keys);
-    exit(EXIT_FAILURE);
-  } else if (child_num == num_keys) {
-    return internal_node_right_child(node);
-  } else {
-    return internal_node_cell(node, child_num);
-  }
-}
 
 // getter + setter for root
 bool is_node_root(void* node) {
@@ -403,16 +446,6 @@ void initialize_leaf_node(void* node) {
   set_node_type(node, NODE_LEAF);
   set_node_root(node, false);
   *leaf_node_num_cells(node) = 0;
-}
-
-/*
-Until we start recycling free pages, new pages will always
-go onto the end of the database file
-*/
-uint32_t get_unused_page_num(Pager* pager) { return pager->num_pages; }
-
-uint32_t* internal_node_key(void* node, uint32_t key_num) {
-  return internal_node_cell(node, key_num) + INTERNAL_NODE_CHILD_SIZE;
 }
 
 
