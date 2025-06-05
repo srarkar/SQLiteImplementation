@@ -134,6 +134,8 @@ const uint32_t INTERNAL_NODE_KEY_SIZE = sizeof(uint32_t);
 const uint32_t INTERNAL_NODE_CHILD_SIZE = sizeof(uint32_t);
 const uint32_t INTERNAL_NODE_CELL_SIZE =
     INTERNAL_NODE_CHILD_SIZE + INTERNAL_NODE_KEY_SIZE;
+// Keep this small for testing
+const uint32_t INTERNAL_NODE_MAX_CELLS = 3;
 
 // page and cell number determine location in B-Tree
 typedef struct {
