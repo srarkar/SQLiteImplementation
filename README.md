@@ -1,4 +1,4 @@
-<img src="https://github.com/user-attachments/assets/056e16ff-bcef-447a-b4de-223066c7a3d1" alt="sqlbanner" width="100"/>
+<img src="https://github.com/user-attachments/assets/056e16ff-bcef-447a-b4de-223066c7a3d1" alt="sqlbanner" width="500"/>
 
 ## Overview
 This is the implementation of a very simple database modeled after SQLite. 
