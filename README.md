@@ -27,6 +27,9 @@ The meta commands available are:
   - `.btree`: indexes and tables in SQLite use B-trees to store data for logarithmic time operations. Running `.btree` outputs a visual representation of the data currently stored. More information on B-trees can be found in ``notes.pdf``.
   - `.constants`: This prints out some relevant constant values, such as row size, the cell size of a leaf node, and more.
 
+### Test Cases
+In the `spec` folder, there is a `db_spec.rb ` file that contains 13 test cases that verify the database can run the basic commands and meta commands with expected outputs. 
+
 ## Notes
 A `notes.pdf` page can be found in the main directory, including an SQLite overview, visual representations, and references.
 
