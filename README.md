@@ -15,7 +15,8 @@ Then, run it with `./db test`, where "test" is an arbitrary name for the name of
 
 The database has even fewer commands than SQLite. The only actual commands are ``insert`` and select``. 
 
-For example, ``insert 1 user1 person1@example.com`` adds a row with id = `1`, username = `user1`, and email = `person1@example.com`. Try messing with the constraints (number of attributes, a negative id) to verify that they are properly implemented.
+For example, ``insert 1 user1 person1@example.com`` adds a row with id = `1`, username = `user1`, and email = `person1@example.com`.
+Try messing with the constraints, such as attempting to store too few or too many attributes or a negative id, to verify that they are properly implemented.
 
 Then, the contents of the database can be displayed by querying a `select`. There are no parameters for select, as it simply outputs the entire content of the table. 
 
@@ -25,4 +26,7 @@ The meta commands available are:
   - `.exit`: self-explanatory. Since we use an external file to store the table, running `.exit` does _not_ delete information that has been inserted previously.'
   - `.btree`: indexes and tables in SQLite use B-trees to store data for logarithmic time operations. Running `.btree` outputs a visual representation of the data currently stored. More information on B-trees can be found in ``notes.pdf``.
   - `.constants`: This prints out some relevant constant values, such as row size, the cell size of a leaf node, and more.
+
+## Notes
+A `notes.pdf` page can be found in the main directory, including an SQLite overview, visual representations, and references.
 
