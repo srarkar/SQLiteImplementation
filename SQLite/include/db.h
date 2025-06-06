@@ -9,6 +9,7 @@
 #define COLUMN_EMAIL_SIZE 255
 #define TABLE_MAX_PAGES 100 // max num allocated pages
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
+#define INVALID_PAGE_NUM UINT32_MAX
 
 typedef struct {
   char* buffer;
