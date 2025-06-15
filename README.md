@@ -28,7 +28,8 @@ The meta commands available are:
   - `.constants`: This prints out some relevant constant values, such as row size, the cell size of a leaf node, and more.
 
 ### Test Cases
-In the `spec` folder, there is a `db_spec.rb ` file that contains 13 test cases that verify the database can run the basic commands and meta commands with expected outputs. 
+In the `spec` folder, there is a `db_spec.rb` file that contains 13 test cases that verify the database can run the basic commands and meta commands with expected outputs. 
+Once your current directory is ``SQLite`` and you have compiled ``src/db.c``, you can run the test cases with ``rspec spec/db_spec.rb``.
 
 ## Notes
 A `notes.pdf` page can be found in the main directory, including an SQLite overview, visual representations, and references.
