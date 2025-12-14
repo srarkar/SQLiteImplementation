@@ -13,7 +13,7 @@ When you list out the current directory's contents via `ls`, you should see the 
 To run the database, compile it by running ```gcc db -o src/db.c```. This will create an executable called `db` in the current directory. 
 Then, run it with `./db test`, where "test" is an arbitrary name for the name of our database. As you interact with the database, inserted information will be stored in a document called test.
 
-The database has even fewer commands than SQLite. The only actual commands are ``insert`` and select``. 
+The database has even fewer commands than SQLite. The only actual commands are ``insert`` and ``select``. 
 
 For example, ``insert 1 user1 person1@example.com`` adds a row with id = `1`, username = `user1`, and email = `person1@example.com`.
 Try messing with the constraints, such as attempting to store too few or too many attributes or a negative id, to verify that they are properly implemented.
